@@ -1,10 +1,23 @@
+
+
 .gameboard{
-    height: 200px;
-    width: 200px;
+    border: 1px solid;
+    display: flex;
+    flex-wrap: wrap;
+    height: 800px;
+    width: 1000px;
     background-color: black;
 }
 .grass{
+    display: block;
+    background-color: darkgoldenrod;
+    height: 60px;
+    width: 60px;
+}
+
+.blank{
+    display: block;
     background-color: green;
-    height: 20px;
-    width: 20px;
+    height: 60px;
+    width: 1000px;
 }
