@@ -1,28 +1,50 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const logsRight = document.querySelectorAll('.log-left')
+var froggerGame = function() {
+  var self = this;
+  this.frog = undefined;
+  this.updateInterval = undefined;
 
-    function moveLogRight(logRight) {
-        switch (true) {
-          case logRight.classList.contains('l1'):
-          logRight.classList.remove('l1')
-          logRight.classList.add('l5')
-          break
-          case logRight.classList.contains('l2'):
-          logRight.classList.remove('l2')
-          logRight.classList.add('l1')
-          break
-          case logRight.classList.contains('l3'):
-          logRight.classList.remove('l3')
-          logRight.classList.add('l2')
-          break
-          case logRight.classList.contains('l4'):
-          logRight.classList.remove('l4')
-          logRight.classList.add('l3')
-          break
-          case logRight.classList.contains('l5'):
-          logRight.classList.remove('l5')
-          logRight.classList.add('l4')
-          break
-        }
-      }
-)}
+  this.update = function() {
+      $('#frog').css("top",self.frog.yPos+"px");
+      $('#frog').css("left",self.frog.xPos+"px");
+      console.log(self.frog.xPos);
+      console.log(self.frog.yPos);
+  }
+
+  this.initialize = function() {
+      self.frog = new frog(0,0);
+      console.log("test");
+      $(document).keydown(function(event){
+          if(event.code=="ArrowUp") {
+              event.preventDefault();
+              self.frog.yPos -= self.frog.speed;
+              console.log("up");
+          }
+          else if(event.code=="ArrowDown") {
+              event.preventDefault();
+              self.frog.yPos += self.frog.speed;
+              console.log("down");
+          }
+          else if(event.code=="ArrowLeft") {
+              event.preventDefault();
+              self.frog.xPos -= self.frog.speed;
+              console.log("left");
+          }
+          else if(event.code=="ArrowRight") {
+              event.preventDefault();
+              self.frog.xPos += self.frog.speed;
+              console.log("right");
+          }
+      });
+
+      updateInterval = setInterval(this.update,20);
+  }
+
+  this.initialize();
+}
+
+var frog=function(x,y) {
+  var self = this;
+  this.xPos = x;
+  this.yPos = y;
+  this.speed = 60;
+}

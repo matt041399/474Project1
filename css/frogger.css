@@ -1,10 +1,16 @@
-
+#frog {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 60px;
+    width: 60px;
+}
 
 .gameboard{
     border: 1px solid;
     display: flex;
     flex-wrap: wrap;
-    height: 800px;
+    height: 780px;
     width: 1000px;
     background-color: black;
 }
