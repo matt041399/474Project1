@@ -4,6 +4,17 @@
     left: 420px;
     height: 60px;
     width: 60px;
+    z-index:10;
+}
+
+.log {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 60px;
+    width: 240px;
+    color: brown;
+    background-color: brown;
 }
 
 .game {
@@ -21,18 +32,26 @@
     left: 50%;
     margin-left: -450px;
     background-color: black;
+    overflow:hidden;
+}
+
+.street{
+    display: block;
+    background-color: grey;
+    height: 60px;
+    width: 900px;
 }
 
 .grass{
     display: block;
-    background-color: darkgoldenrod;
+    background-color: green;
     height: 60px;
-    width: 60px;
+    width: 900px;
 }
 
-.blank{
+.water{
     display: block;
-    background-color: green;
+    background-color: lightskyblue;
     height: 60px;
     width: 900px;
 }
