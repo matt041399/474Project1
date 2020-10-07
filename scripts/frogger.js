@@ -30,7 +30,7 @@ var froggerGame = function () {
     self.taxi = [];
     // will need to do the same for cars here as well
   }
-
+  self.onLog = false;
   this.initializeObjects = function () {
     self.frog = new frog(0, 0);
 
@@ -108,15 +108,21 @@ var frog = function (x, y) {
         //reset position
         froggerGame.initialize(level);
     }
-
+    self.onLog = false;
     //Check frogs position against logs position. For some reason the Y value of the logs start from the bottom and the Y value of the frog starts from the top. Or maybe the other way around
-    //TODO: Got Y working, fix x
    logList.forEach((log)=>{
         if((self.xPos+450)>(log.xPos) && (self.xPos+450)<(log.xPos+240) && (720-self.yPos)<(log.yPos+30) &&
          (720-self.yPos)>(log.yPos-30)){
             self.xPos += log.speedVector;
-        }
+            self.onLog = true;
+          }
     });
+    //Checks if the frog is in the water and no on a log
+    if(self.yPos==420 || self.yPos==480 || self.yPos == 540){
+      if(self.onLog==false){
+        console.log("DED");
+      }
+    }
 
     taxiList.forEach((taxi)=>{
       if ((self.xPos+450)>(taxi.xPos) && (self.xPos+450)<(taxi.xPos+taxi.length) && (720-self.yPos)<(taxi.yPos+30) &&
