@@ -74,6 +74,8 @@ var frog = function (x, y) {
   this.xPos = x;
   this.yPos = y;
   this.speed = 60;
+  this.onLog = false;
+
 
   this.update = function(logList) {
     // enforce gameboard bounds
@@ -99,14 +101,20 @@ var frog = function (x, y) {
         //reset position
         froggerGame.initialize(level);
     }
-
+    self.onLog = false;
     //Check frogs position against logs position. For some reason the Y value of the logs start from the bottom and the Y value of the frog starts from the top. Or maybe the other way around
-    //TODO: Got Y working, fix x
    logList.forEach((log)=>{
         if((self.xPos+450)>(log.xPos) && (self.xPos+450)<(log.xPos+240) && (720-self.yPos)<(log.yPos+30) && (720-self.yPos)>(log.yPos-30)){
             self.xPos += log.speedVector;
-        }
+            self.onLog = true;
+          }
     });
+    //Checks if the frog is in the water and no on a log
+    if(self.yPos==420 || self.yPos==480 || self.yPos == 540){
+      if(self.onLog==false){
+        console.log("DED");
+      }
+    }
 
     $('#frog').css("top", -self.yPos + "px"); //note the negative sign; necessary so up is up and down is down; for some reason using the css property "bottom" didn't work right
     $('#frog').css("left", self.xPos + "px");
