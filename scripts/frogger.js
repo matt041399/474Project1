@@ -11,7 +11,7 @@ var froggerGame = function() {
 
   // update the game state and call update functions of other objects
   this.update = function() {
-    self.frog.update();
+    self.frog.update(self.log);
     self.log.forEach((log)=>log.update());
   }
 
@@ -64,7 +64,7 @@ var frog = function(x,y) {
   this.yPos = y;
   this.speed = 60;
 
-  this.update = function() {
+  this.update = function(logList) {
     // enforce gameboard bounds
     // assumes (0,0) is the bottom center
     if(self.xPos < -gameBoardWidth/2 + 30) {
@@ -84,15 +84,24 @@ var frog = function(x,y) {
     // check if the frog has reached the top of the gameboard
     if (self.yPos == gameBoardHeight - 60) {
         level++;
-        console.log("Level " + level); // would update the HTML object displaying the level here
+        //console.log("Level " + level); // would update the HTML object displaying the level here
         //reset position
         froggerGame.initialize(level);
-      }
+    }
+
+    //Check frogs position against logs position. For some reason the Y value of the logs start from the bottom and the Y value of the frog starts from the top. Or maybe the other way around
+    //TODO: Got Y working, fix x
+   logList.forEach((log)=>{
+        if((self.xPos+450)>(log.xPos) && (self.xPos+450)<(log.xPos+240) && (720-self.yPos)<(log.yPos+30) && (720-self.yPos)>(log.yPos-30)){
+            self.xPos += log.speedVector;
+        }
+    });
+
 
     $('#frog').css("top",-self.yPos+"px"); //note the negative sign; necessary so up is up and down is down; for some reason using the css property "bottom" didn't work right
     $('#frog').css("left",self.xPos+"px");
-    console.log("frog x",self.xPos);
-    console.log("frog y",self.yPos);
+    //console.log("frog x",self.xPos);
+    //console.log("frog y",self.yPos);
   }
 
   // moves the frog by speed * each multiplier passed in
@@ -129,8 +138,8 @@ var log = function (x,y,speedVector){
         
         this.obj.css("left",self.xPos+"px");
         this.obj.css("top",self.yPos+"px");
-        console.log(self.xPos);
-        console.log(self.yPos);
+        //console.log(self.xPos);
+//console.log(self.yPos);
     }   
 
     this.move = function(){
