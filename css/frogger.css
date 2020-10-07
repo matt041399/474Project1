@@ -17,6 +17,26 @@
     background-color: brown;
 }
 
+.taxi {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 60px;
+    width: 120px;
+    color: yellow;
+    background-color: yellow;
+}
+
+.bus {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 60px;
+    width: 180px;
+    color: blue;
+    background-color: black;  
+}
+
 .game {
     position: relative;
 }

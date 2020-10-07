@@ -6,12 +6,15 @@ var froggerGame = function () {
   var self = this;
   this.frog = undefined;
   this.log = [];
+  this.taxi = [];
   this.updateInterval = undefined;
 
   // update the game state and call update functions of other objects
   this.update = function () {
-    self.frog.update(self.log);
+    self.frog.update(self.log, self.taxi);
     self.log.forEach((log) => log.update());
+    self.taxi.forEach((taxi)=>taxi.update());
+
 
     if (self.frog.hasReachedEnd()) { //check if frog has reached the top
       level++;
@@ -24,6 +27,7 @@ var froggerGame = function () {
     self.frog = undefined;
     $(".log").remove();
     self.log = [];
+    self.taxi = [];
     // will need to do the same for cars here as well
   }
 
@@ -37,6 +41,10 @@ var froggerGame = function () {
     self.log.push(new log(-240 + 600, 270 + 30, 3 * level));
     self.log.push(new log(0 + 600, 210 + 30, -3 * level));
     self.log.push(new log(450 + 600, 150 + 30, 3 * level));
+  
+    self.taxi.push(new taxi(-240, 450 + 30, 5*level))
+    self.taxi.push(new taxi(0, 510 + 30, -5*level))
+    self.taxi.push(new taxi(-240, 570 + 30, 5*level))
   }
 
   //initialize
@@ -74,8 +82,9 @@ var frog = function (x, y) {
   this.xPos = x;
   this.yPos = y;
   this.speed = 60;
+  status = undefined;
 
-  this.update = function(logList) {
+  this.update = function(logList, taxiList) {
     // enforce gameboard bounds
     // assumes (0,0) is the bottom center
     if (self.xPos < -gameBoardWidth / 2 + 30) {
@@ -103,9 +112,19 @@ var frog = function (x, y) {
     //Check frogs position against logs position. For some reason the Y value of the logs start from the bottom and the Y value of the frog starts from the top. Or maybe the other way around
     //TODO: Got Y working, fix x
    logList.forEach((log)=>{
-        if((self.xPos+450)>(log.xPos) && (self.xPos+450)<(log.xPos+240) && (720-self.yPos)<(log.yPos+30) && (720-self.yPos)>(log.yPos-30)){
+        if((self.xPos+450)>(log.xPos) && (self.xPos+450)<(log.xPos+240) && (720-self.yPos)<(log.yPos+30) &&
+         (720-self.yPos)>(log.yPos-30)){
             self.xPos += log.speedVector;
         }
+    });
+
+    taxiList.forEach((taxi)=>{
+      if ((self.xPos+450)>(taxi.xPos) && (self.xPos+450)<(taxi.xPos+taxi.length) && (720-self.yPos)<(taxi.yPos+30) &&
+      (720-self.yPos)>(taxi.yPos-30)){
+        console.log("Dead Frog");
+        self.xPos = 0;
+        self.yPos = 0;
+      }
     });
 
     $('#frog').css("top", -self.yPos + "px"); //note the negative sign; necessary so up is up and down is down; for some reason using the css property "bottom" didn't work right
@@ -176,4 +195,41 @@ var log = function (x,y,speedVector){
     this.update();
   }
   this.initialize();
+}
+
+
+//taxi class
+var taxi = function (x,y,speedVector){
+    var self = this;
+    this.xPos = x;
+    this.yPos = y;
+    this.speedVector = speedVector;
+    this.length = 120;
+    this.obj=undefined;
+    this.update = function(){
+
+        this.move();
+
+        if(self.xPos < -this.length) {
+            self.xPos = gameBoardWidth;
+        }
+
+        if(self.xPos > gameBoardWidth) {
+            self.xPos = -this.length;
+        }
+
+        this.obj.css("left",self.xPos+"px");
+        this.obj.css("top",self.yPos+"px");
+        console.log(self.xPos);
+        console.log(self.yPos);
+    }   
+
+    this.move = function(){
+        this.xPos += this.speedVector;
+    }
+    this.initialize=function(){
+        this.obj=$('<div class="taxi"></div>').appendTo('.gameboard');
+        this.update();
+    }
+    this.initialize();
 }
