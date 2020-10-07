@@ -1,6 +1,7 @@
 var gameBoardWidth = 60 * 15;
 var gameBoardHeight = 60 * 13;
 var level = 1;
+var levelTimeout = undefined;
 
 var froggerGame = function () {
   var self = this;
@@ -13,11 +14,18 @@ var froggerGame = function () {
     self.frog.update();
     self.log.forEach((log) => log.update());
 
-    if (self.frog.hasReachedEnd()) { //check if frog has reached the top
-      level++;
-      self.destroyObjs();
-      self.initializeObjects();
+    //go to next level if frog reaches the top
+    if (levelTimeout == undefined && self.frog.hasReachedEnd()) { 
+      self.frog.active = false;
+      levelTimeout = setTimeout(self.nextLevel, 1000); //frog pauses for 1 second before going to next level
     }
+  }
+
+  this.nextLevel = function() {
+    level++;
+    self.destroyObjs();
+    self.initializeObjects();
+    levelTimeout = undefined;
   }
 
   this.destroyObjs = function () {
@@ -37,6 +45,8 @@ var froggerGame = function () {
     self.log.push(new log(-240 + 600, 270 + 30, 3 * level));
     self.log.push(new log(0 + 600, 210 + 30, -3 * level));
     self.log.push(new log(450 + 600, 150 + 30, 3 * level));
+
+    $('#level-display').text("Level: " + level);
   }
 
   //initialize
@@ -74,8 +84,13 @@ var frog = function (x, y) {
   this.xPos = x;
   this.yPos = y;
   this.speed = 60;
+  this.active = true;
 
   this.update = function () {
+    if(!self.active) {
+      return;
+    }
+
     // enforce gameboard bounds
     // assumes (0,0) is the bottom center
     if (self.xPos < -gameBoardWidth / 2 + 30) {
@@ -105,6 +120,10 @@ var frog = function (x, y) {
   // moves the frog by speed * each multiplier passed in
   // example: move(1,0) moves the frog [speed] to the right
   this.move = function (xMult, yMult) {
+    if(!self.active) {
+      return;
+    }
+
     self.xPos += self.speed * xMult;
     self.yPos += self.speed * yMult;
   }
