@@ -87,7 +87,7 @@ var frog = function (x, y) {
   this.active = true;
   this.onLog = false;
 
-  this.update = function (loglist) {
+  this.update = function (logList) {
     if(!self.active) {
       return;
     }
@@ -107,13 +107,6 @@ var frog = function (x, y) {
       self.yPos = gameBoardHeight - 60;
     }
 
-    // check if the frog has reached the top of the gameboard
-    if (self.yPos == gameBoardHeight - 60) {
-        level++;
-        //console.log("Level " + level); // would update the HTML object displaying the level here
-        //reset position
-        froggerGame.initialize(level);
-    }
     self.onLog = false;
     //Check frogs position against logs position. For some reason the Y value of the logs start from the bottom and the Y value of the frog starts from the top. Or maybe the other way around
    logList.forEach((log)=>{
