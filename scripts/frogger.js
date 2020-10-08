@@ -66,17 +66,19 @@ var froggerGame = function () {
   this.initializeObjects = function () {
     self.frog = new frog(0, 0);
 
-    self.log.push(new log(-240, 270 + 30, 3 * level));
-    self.log.push(new log(0, 210 + 30, -3 * level));
-    self.log.push(new log(450, 150 + 30, 3 * level));
+    //Logs start at random positions, but they all have the same speed
+    self.log.push(new log((890*Math.random()) - 240, 270 + 30, 3 + level));
+    self.log.push(new log((890*Math.random()) - 240, 210 + 30, -3 - level));
+    self.log.push(new log((890*Math.random()) - 240, 150 + 30, 3 + level));
 
-    self.log.push(new log(-240 + 600, 270 + 30, 3 * level));
-    self.log.push(new log(0 + 600, 210 + 30, -3 * level));
-    self.log.push(new log(450 + 600, 150 + 30, 3 * level));
+    self.log.push(new log((890*Math.random()) - 240 + 600, 270 + 30, 3 + level));
+    self.log.push(new log((890*Math.random()) - 240 + 600, 210 + 30, -3 - level));
+    self.log.push(new log((890*Math.random()) - 240 + 600, 150 + 30, 3 + level));
 
-    self.taxi.push(new taxi(-240, 450 + 30, 5 * level))
-    self.taxi.push(new taxi(0, 510 + 30, -5 * level))
-    self.taxi.push(new taxi(-240, 570 + 30, 5 * level))
+    //Cars start at same position, but have randomized speeds
+    self.taxi.push(new taxi(-240, 450 + 30, ((Math.random()*10)) + (level)))
+    self.taxi.push(new taxi(0, 510 + 30, ((Math.random()*-10)) - (level)))
+    self.taxi.push(new taxi(-240, 570 + 30, ((Math.random()*10)) + (level)))
 
     $('#level-display').text("Level: " + level);
     $('#lives-display').text("Lives: " + lives);
