@@ -7,14 +7,16 @@
     z-index: 5;
 }
 
+body {
+    background-color: black;
+}
+
 .log {
     position: absolute;
     top: 0px;
     left: 0px;
     height: 60px;
     width: 240px;
-    color: brown;
-    background-color: brown;
 }
 
 .taxi {
@@ -23,8 +25,6 @@
     left: 0px;
     height: 60px;
     width: 120px;
-    color: yellow;
-    background-color: yellow;
 }
 
 .bus {
@@ -42,7 +42,7 @@
 }
 
 .gameboard{
-    border: 3px solid;
+    border: 3px solid white;
     display: flex;
     flex-wrap: wrap;
     height: 780px;
@@ -159,4 +159,14 @@
 
 .submit-button{
     display: flex;
+}
+
+#level-display {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: white;
+}
+
+#lives-display {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: white;
 }

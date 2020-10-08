@@ -201,6 +201,19 @@ var frog = function (x, y) {
   }
 }
 
+function animateFrog() {
+  var i = 1; // frog image counter
+  var id = setInterval(frame, 30);
+  function frame() {
+    if (i == 8) {
+      clearInterval(id);
+    } else {
+      document.getElementById("frog").src = "images/frog" + i + ".png";
+      i++;
+    }
+  }
+}
+
 //log class
 var log = function (x, y, speedVector) {
   var self = this;
@@ -247,23 +260,10 @@ var log = function (x, y, speedVector) {
     this.xPos += this.speedVector;
   }
   this.initialize = function () {
-    this.obj = $('<div class="log"></div>').appendTo('.gameboard');
+    this.obj = $('<div class="log"><img src = "images/log.png"></div>').appendTo('.gameboard');
     this.update();
   }
   this.initialize();
-}
-
-function animateFrog() {
-  var i = 1; // frog image counter
-  var id = setInterval(frame, 30);
-  function frame() {
-    if (i == 8) {
-      clearInterval(id);
-    } else {
-      document.getElementById("frog").src = "images/frog" + i + ".png";
-      i++;
-    }
-  }
 }
 
 //taxi class
@@ -296,7 +296,24 @@ var taxi = function (x, y, speedVector) {
     this.xPos += this.speedVector;
   }
   this.initialize = function () {
-    this.obj = $('<div class="taxi"></div>').appendTo('.gameboard');
+    var rand = Math.random() * 100;
+    if (this.speedVector > 0) {
+      if (rand <= 33) {
+        this.obj = $('<div class="taxi"><img src = "images/blue_car.png"></div>').appendTo('.gameboard');
+      } else if (rand <= 66) {
+        this.obj = $('<div class="taxi"><img src = "images/green_car.png"></div>').appendTo('.gameboard');
+      } else {
+        this.obj = $('<div class="taxi"><img src = "images/taxi.png"></div>').appendTo('.gameboard');
+      }
+    } else {
+      if (rand <= 33) {
+        this.obj = $('<div class="taxi"><img src = "images/blue_car_reverse.png"></div>').appendTo('.gameboard');
+      } else if (rand <= 66) {
+        this.obj = $('<div class="taxi"><img src = "images/green_car_reverse.png"></div>').appendTo('.gameboard');
+      } else {
+        this.obj = $('<div class="taxi"><img src = "images/taxi_reverse.png"></div>').appendTo('.gameboard');
+      }
+    }
     this.update();
   }
   this.initialize();
