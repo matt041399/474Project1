@@ -11,8 +11,15 @@
 </head>
 
 <body>
+  <div id="gameover-container">
+    <div id="gameover-content">
+      Game Over!
+      <button type="button" class="gameover-button" onclick="window.location.reload();">Restart</button>
+    </div>
+  </div>
   <div class="game">
     <h1 id="level-display">Level: </h1>
+    <h1 id="lives-display">Lives: </h1>
     <div class="gameboard">
       <div id='frog'>
         <img id='frog' src="https://www.shareicon.net/data/256x256/2016/09/16/829531_frog_512x512.png">
@@ -38,7 +45,7 @@
 </body>
 <script type="text/javascript">
   $(function () {
-    var temp = new froggerGame();
+    var game = new froggerGame();
   });
 </script>
 
