@@ -1,38 +1,66 @@
 var gameBoardWidth = 60 * 15;
 var gameBoardHeight = 60 * 13;
 var level = 1;
-var levelTimeout = undefined;
+var lives = 3;
 
 var froggerGame = function () {
   var self = this;
   this.frog = undefined;
   this.log = [];
+  this.taxi = [];
   this.updateInterval = undefined;
+  this.levelTimeout = undefined;
 
   // update the game state and call update functions of other objects
   this.update = function () {
-    self.frog.update(self.log);
+    self.frog.update(self.log, self.taxi);
     self.log.forEach((log) => log.update());
+    self.taxi.forEach((taxi) => taxi.update());
 
     //go to next level if frog reaches the top
-    if (levelTimeout == undefined && self.frog.hasReachedEnd()) { 
+    if (self.levelTimeout == undefined && self.frog.hasReachedEnd()) {
       self.frog.active = false;
-      levelTimeout = setTimeout(self.nextLevel, 1000); //frog pauses for 1 second before going to next level
+      self.levelTimeout = setTimeout(self.nextLevel, 1000); //frog pauses for 1 second before going to next level
+    }
+
+    if (self.frog.dead) {
+      lives--;
+      clearInterval(self.updateInterval); //temporarily stop moving things
+      self.levelTimeout = setTimeout(self.resetLevel, 1000);
     }
   }
 
-  this.nextLevel = function() {
+  this.nextLevel = function () {
     level++;
     self.destroyObjs();
     self.initializeObjects();
-    levelTimeout = undefined;
+    self.levelTimeout = undefined;
+  }
+
+  this.resetLevel = function () {
+    if(lives < 1) {
+      self.gameOver();
+    }
+    else {
+      self.destroyObjs();
+      self.initializeObjects();
+      self.updateInterval = setInterval(self.update, 20);
+      self.levelTimeout = undefined;
+    }
+  }
+
+  this.gameOver = function() {
+    $('#lives-display').text("Lives: " + 0);
+    $('#gameover-container').css('opacity','1');
+    $('#gameover-container').css('visibility', 'visible');
   }
 
   this.destroyObjs = function () {
     self.frog = undefined;
     $(".log").remove();
+    $(".taxi").remove();
     self.log = [];
-    // will need to do the same for cars here as well
+    self.taxi = [];
   }
 
   this.initializeObjects = function () {
@@ -46,7 +74,12 @@ var froggerGame = function () {
     self.log.push(new log(0 + 600, 210 + 30, -3 * level));
     self.log.push(new log(450 + 600, 150 + 30, 3 * level));
 
+    self.taxi.push(new taxi(-240, 450 + 30, 5 * level))
+    self.taxi.push(new taxi(0, 510 + 30, -5 * level))
+    self.taxi.push(new taxi(-240, 570 + 30, 5 * level))
+
     $('#level-display').text("Level: " + level);
+    $('#lives-display').text("Lives: " + lives);
   }
 
   //initialize
@@ -94,11 +127,13 @@ var frog = function (x, y) {
   this.speed = 60;
   this.active = true;
   this.onLog = false;
+  this.dead = false;
 
-  this.update = function (logList) {
-    if(!self.active) {
+  this.update = function (logList, taxiList) {
+    if (!self.active) {
       return;
     }
+
     // enforce gameboard bounds
     // assumes (0,0) is the bottom center
     if (self.xPos < -gameBoardWidth / 2 + 30) {
@@ -117,18 +152,27 @@ var frog = function (x, y) {
 
     self.onLog = false;
     //Check frogs position against logs position. For some reason the Y value of the logs start from the bottom and the Y value of the frog starts from the top. Or maybe the other way around
-   logList.forEach((log)=>{
-        if((self.xPos+450)>(log.xPos) && (self.xPos+450)<(log.xPos+240) && (720-self.yPos)<(log.yPos+30) && (720-self.yPos)>(log.yPos-30)){
-            self.xPos += log.speedVector;
-            self.onLog = true;
-          }
+    logList.forEach((log) => {
+      if ((self.xPos + 450) > (log.xPos) && (self.xPos + 450) < (log.xPos + 240) && (720 - self.yPos) < (log.yPos + 30) &&
+        (720 - self.yPos) > (log.yPos - 30)) {
+        self.xPos += log.speedVector;
+        self.onLog = true;
+      }
     });
     //Checks if the frog is in the water and no on a log
-    if(self.yPos==420 || self.yPos==480 || self.yPos == 540){
-      if(self.onLog==false){
-        console.log("DED");
+    if (self.yPos == 420 || self.yPos == 480 || self.yPos == 540) {
+      if (self.onLog == false) {
+        self.die();
       }
     }
+
+    taxiList.forEach((taxi) => {
+      if ((self.xPos + 450) > (taxi.xPos) && (self.xPos + 450) < (taxi.xPos + taxi.length) && (720 - self.yPos) < (taxi.yPos + 30) &&
+        (720 - self.yPos) > (taxi.yPos - 30)) {
+        console.log("Dead Frog");
+        self.die();
+      }
+    });
 
     $('#frog').css("top", -self.yPos + "px"); //note the negative sign; necessary so up is up and down is down; for some reason using the css property "bottom" didn't work right
     $('#frog').css("left", self.xPos + "px");
@@ -143,43 +187,48 @@ var frog = function (x, y) {
   // moves the frog by speed * each multiplier passed in
   // example: move(1,0) moves the frog [speed] to the right
   this.move = function (xMult, yMult) {
-    if(!self.active) {
+    if (!self.active) {
       return;
     }
 
     self.xPos += self.speed * xMult;
     self.yPos += self.speed * yMult;
   }
+
+  // this is a separate function in case we want to add death animations or something
+  this.die = function () {
+    self.dead = true;
+  }
 }
 
 //log class
-var log = function (x,y,speedVector){
-    var self = this;
-    this.xPos = x;
-    this.yPos = y;
-    this.speedVector = speedVector;
-    this.length = 240;
-    this.obj=undefined;
-    this.update = function(){
+var log = function (x, y, speedVector) {
+  var self = this;
+  this.xPos = x;
+  this.yPos = y;
+  this.speedVector = speedVector;
+  this.length = 240;
+  this.obj = undefined;
+  this.update = function () {
 
-        this.move();
+    this.move();
 
-        if(self.xPos < -this.length) {
-            self.xPos = gameBoardWidth;
-        }
+    if (self.xPos < -this.length) {
+      self.xPos = gameBoardWidth;
+    }
 
-        if(self.xPos > gameBoardWidth) {
-            self.xPos = -this.length;
-        }
+    if (self.xPos > gameBoardWidth) {
+      self.xPos = -this.length;
+    }
 
-        
-        this.obj.css("left",self.xPos+"px");
-        this.obj.css("top",self.yPos+"px");
 
-    }   
+    this.obj.css("left", self.xPos + "px");
+    this.obj.css("top", self.yPos + "px");
 
-    this.move = function(){
-        this.xPos += this.speedVector;
+  }
+
+  this.move = function () {
+    this.xPos += this.speedVector;
     if (self.xPos < -this.length) {
       self.xPos = gameBoardWidth;
     }
@@ -215,4 +264,40 @@ function animateFrog() {
       i++;
     }
   }
+}
+
+//taxi class
+var taxi = function (x, y, speedVector) {
+  var self = this;
+  this.xPos = x;
+  this.yPos = y;
+  this.speedVector = speedVector;
+  this.length = 120;
+  this.obj = undefined;
+  this.update = function () {
+
+    this.move();
+
+    if (self.xPos < -this.length) {
+      self.xPos = gameBoardWidth;
+    }
+
+    if (self.xPos > gameBoardWidth) {
+      self.xPos = -this.length;
+    }
+
+    this.obj.css("left", self.xPos + "px");
+    this.obj.css("top", self.yPos + "px");
+    console.log(self.xPos);
+    console.log(self.yPos);
+  }
+
+  this.move = function () {
+    this.xPos += this.speedVector;
+  }
+  this.initialize = function () {
+    this.obj = $('<div class="taxi"></div>').appendTo('.gameboard');
+    this.update();
+  }
+  this.initialize();
 }
