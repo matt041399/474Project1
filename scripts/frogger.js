@@ -1,6 +1,7 @@
 var gameBoardWidth = 60 * 15;
 var gameBoardHeight = 60 * 13;
 var level = 1;
+var levelTimeout = undefined;
 
 var froggerGame = function () {
   var self = this;
@@ -16,11 +17,18 @@ var froggerGame = function () {
     self.taxi.forEach((taxi)=>taxi.update());
 
 
-    if (self.frog.hasReachedEnd()) { //check if frog has reached the top
-      level++;
-      self.destroyObjs();
-      self.initializeObjects();
+    //go to next level if frog reaches the top
+    if (levelTimeout == undefined && self.frog.hasReachedEnd()) { 
+      self.frog.active = false;
+      levelTimeout = setTimeout(self.nextLevel, 1000); //frog pauses for 1 second before going to next level
     }
+  }
+
+  this.nextLevel = function() {
+    level++;
+    self.destroyObjs();
+    self.initializeObjects();
+    levelTimeout = undefined;
   }
 
   this.destroyObjs = function () {
@@ -45,6 +53,9 @@ var froggerGame = function () {
     self.taxi.push(new taxi(-240, 450 + 30, 5*level))
     self.taxi.push(new taxi(0, 510 + 30, -5*level))
     self.taxi.push(new taxi(-240, 570 + 30, 5*level))
+    
+    $('#level-display').text("Level: " + level);
+
   }
 
   //initialize
@@ -83,8 +94,14 @@ var frog = function (x, y) {
   this.yPos = y;
   this.speed = 60;
   status = undefined;
+  this.active = true;
+  this.onLog = false;
 
-  this.update = function(logList, taxiList) {
+  this.update = function (logList, taxiList) {
+    if(!self.active) {
+      return;
+    }
+
     // enforce gameboard bounds
     // assumes (0,0) is the bottom center
     if (self.xPos < -gameBoardWidth / 2 + 30) {
@@ -101,13 +118,6 @@ var frog = function (x, y) {
       self.yPos = gameBoardHeight - 60;
     }
 
-    // check if the frog has reached the top of the gameboard
-    if (self.yPos == gameBoardHeight - 60) {
-        level++;
-        //console.log("Level " + level); // would update the HTML object displaying the level here
-        //reset position
-        froggerGame.initialize(level);
-    }
     self.onLog = false;
     //Check frogs position against logs position. For some reason the Y value of the logs start from the bottom and the Y value of the frog starts from the top. Or maybe the other way around
    logList.forEach((log)=>{
@@ -131,7 +141,14 @@ var frog = function (x, y) {
         self.xPos = 0;
         self.yPos = 0;
       }
+
     });
+    //Checks if the frog is in the water and no on a log
+    if(self.yPos==420 || self.yPos==480 || self.yPos == 540){
+      if(self.onLog==false){
+        console.log("DED");
+      }
+    }
 
     $('#frog').css("top", -self.yPos + "px"); //note the negative sign; necessary so up is up and down is down; for some reason using the css property "bottom" didn't work right
     $('#frog').css("left", self.xPos + "px");
@@ -146,6 +163,10 @@ var frog = function (x, y) {
   // moves the frog by speed * each multiplier passed in
   // example: move(1,0) moves the frog [speed] to the right
   this.move = function (xMult, yMult) {
+    if(!self.active) {
+      return;
+    }
+
     self.xPos += self.speed * xMult;
     self.yPos += self.speed * yMult;
   }
