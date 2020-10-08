@@ -34,9 +34,9 @@ var froggerGame = function () {
   this.destroyObjs = function () {
     self.frog = undefined;
     $(".log").remove();
+    $(".taxi").remove();
     self.log = [];
     self.taxi = [];
-    // will need to do the same for cars here as well
   }
   self.onLog = false;
   this.initializeObjects = function () {
