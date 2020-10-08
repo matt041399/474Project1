@@ -67,13 +67,13 @@ var froggerGame = function () {
     self.frog = new frog(0, 0);
 
     //Logs start at random positions, but they all have the same speed
-    self.log.push(new log((450*Math.random()) - 240, 270 + 30, 3 + level));
-    self.log.push(new log((450*Math.random()) - 240, 210 + 30, -3 - level));
-    self.log.push(new log((450*Math.random()) - 240, 150 + 30, 3 + level));
+    self.log.push(new log((450*Math.random()), 270 + 30, 3 + level));
+    self.log.push(new log((450*Math.random()), 210 + 30, -3 - level));
+    self.log.push(new log((450*Math.random()), 150 + 30, 3 + level));
 
-    self.log.push(new log((450*Math.random()) - 240 + 450, 270 + 30, 3 + level));
-    self.log.push(new log((450*Math.random()) - 240 + 450, 210 + 30, -3 - level));
-    self.log.push(new log((450*Math.random()) - 240 + 450, 150 + 30, 3 + level));
+    self.log.push(new log((450*Math.random()) + 450, 270 + 30, 3 + level));
+    self.log.push(new log((450*Math.random()) + 450, 210 + 30, -3 - level));
+    self.log.push(new log((450*Math.random()) + 450, 150 + 30, 3 + level));
 
     //Cars start at same position, but have randomized speeds
     self.taxi.push(new taxi(-240, 450 + 30, ((Math.random()*10)) + (level)))
