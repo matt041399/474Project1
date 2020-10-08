@@ -117,4 +117,46 @@
 
 .gameover-button:hover {
     background-color: rgb(0, 104, 0);
+    position: fixed;
+    width: 1500px;
+    height:1500px;
+}
+
+.game-title{
+    font-size: 4cm;
+    text-align: center;
+}
+
+.user-form{
+    position: fixed;
+    top: 30%;
+    left: 40%;
+    display: block;
+    width: 200px;
+    height: 40px;
+    border: 1px solid #999999;
+    font-size: 45px;
+}
+
+.input-text{
+    text-align: center;
+    position: fixed;
+    top: 30%;
+    left: 40%;
+    display: block;
+    width: 200px;
+    height: 40px;
+    border: 1px solid #999999;
+    font-size: 45px;
+
+}
+
+#menuFrog{
+    top: 60%;
+    width: 2000px;
+    height: 2000px;
+}
+
+.submit-button{
+    display: flex;
 }
