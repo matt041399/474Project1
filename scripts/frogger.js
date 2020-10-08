@@ -54,19 +54,27 @@ var froggerGame = function () {
     $(document).keydown(function (event) {
       if (event.code == "ArrowUp") {
         event.preventDefault();
+        document.getElementById("frog").style.transform = "none";
         self.frog.move(0, 1);
+        animateFrog();
       }
       else if (event.code == "ArrowDown") {
         event.preventDefault();
+        document.getElementById("frog").style.transform = 'rotate(180deg)';
         self.frog.move(0, -1);
+        animateFrog();
       }
       else if (event.code == "ArrowLeft") {
         event.preventDefault();
+        document.getElementById("frog").style.transform = 'rotate(-90deg)';
         self.frog.move(-1, 0);
+        animateFrog();
       }
       else if (event.code == "ArrowRight") {
         event.preventDefault();
+        document.getElementById("frog").style.transform = 'rotate(90deg)';
         self.frog.move(1, 0);
+        animateFrog();
       }
     });
 
@@ -194,4 +202,17 @@ var log = function (x,y,speedVector){
     this.update();
   }
   this.initialize();
+}
+
+function animateFrog() {
+  var i = 1; // frog image counter
+  var id = setInterval(frame, 30);
+  function frame() {
+    if (i == 8) {
+      clearInterval(id);
+    } else {
+      document.getElementById("frog").src = "images/frog" + i + ".png";
+      i++;
+    }
+  }
 }
