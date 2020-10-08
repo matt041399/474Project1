@@ -7,12 +7,15 @@ var froggerGame = function () {
   var self = this;
   this.frog = undefined;
   this.log = [];
+  this.taxi = [];
   this.updateInterval = undefined;
 
   // update the game state and call update functions of other objects
   this.update = function () {
-    self.frog.update(self.log);
+    self.frog.update(self.log, self.taxi);
     self.log.forEach((log) => log.update());
+    self.taxi.forEach((taxi)=>taxi.update());
+
 
     //go to next level if frog reaches the top
     if (levelTimeout == undefined && self.frog.hasReachedEnd()) { 
@@ -31,10 +34,11 @@ var froggerGame = function () {
   this.destroyObjs = function () {
     self.frog = undefined;
     $(".log").remove();
+    $(".taxi").remove();
     self.log = [];
-    // will need to do the same for cars here as well
+    self.taxi = [];
   }
-
+  self.onLog = false;
   this.initializeObjects = function () {
     self.frog = new frog(0, 0);
 
@@ -45,8 +49,13 @@ var froggerGame = function () {
     self.log.push(new log(-240 + 600, 270 + 30, 3 * level));
     self.log.push(new log(0 + 600, 210 + 30, -3 * level));
     self.log.push(new log(450 + 600, 150 + 30, 3 * level));
-
+  
+    self.taxi.push(new taxi(-240, 450 + 30, 5*level))
+    self.taxi.push(new taxi(0, 510 + 30, -5*level))
+    self.taxi.push(new taxi(-240, 570 + 30, 5*level))
+    
     $('#level-display').text("Level: " + level);
+
   }
 
   //initialize
@@ -84,13 +93,15 @@ var frog = function (x, y) {
   this.xPos = x;
   this.yPos = y;
   this.speed = 60;
+  status = undefined;
   this.active = true;
   this.onLog = false;
 
-  this.update = function (logList) {
+  this.update = function (logList, taxiList) {
     if(!self.active) {
       return;
     }
+
     // enforce gameboard bounds
     // assumes (0,0) is the bottom center
     if (self.xPos < -gameBoardWidth / 2 + 30) {
@@ -110,10 +121,27 @@ var frog = function (x, y) {
     self.onLog = false;
     //Check frogs position against logs position. For some reason the Y value of the logs start from the bottom and the Y value of the frog starts from the top. Or maybe the other way around
    logList.forEach((log)=>{
-        if((self.xPos+450)>(log.xPos) && (self.xPos+450)<(log.xPos+240) && (720-self.yPos)<(log.yPos+30) && (720-self.yPos)>(log.yPos-30)){
+        if((self.xPos+450)>(log.xPos) && (self.xPos+450)<(log.xPos+240) && (720-self.yPos)<(log.yPos+30) &&
+         (720-self.yPos)>(log.yPos-30)){
             self.xPos += log.speedVector;
             self.onLog = true;
           }
+    });
+    //Checks if the frog is in the water and no on a log
+    if(self.yPos==420 || self.yPos==480 || self.yPos == 540){
+      if(self.onLog==false){
+        console.log("DED");
+      }
+    }
+
+    taxiList.forEach((taxi)=>{
+      if ((self.xPos+450)>(taxi.xPos) && (self.xPos+450)<(taxi.xPos+taxi.length) && (720-self.yPos)<(taxi.yPos+30) &&
+      (720-self.yPos)>(taxi.yPos-30)){
+        console.log("Dead Frog");
+        self.xPos = 0;
+        self.yPos = 0;
+      }
+
     });
     //Checks if the frog is in the water and no on a log
     if(self.yPos==420 || self.yPos==480 || self.yPos == 540){
@@ -194,4 +222,41 @@ var log = function (x,y,speedVector){
     this.update();
   }
   this.initialize();
+}
+
+
+//taxi class
+var taxi = function (x,y,speedVector){
+    var self = this;
+    this.xPos = x;
+    this.yPos = y;
+    this.speedVector = speedVector;
+    this.length = 120;
+    this.obj=undefined;
+    this.update = function(){
+
+        this.move();
+
+        if(self.xPos < -this.length) {
+            self.xPos = gameBoardWidth;
+        }
+
+        if(self.xPos > gameBoardWidth) {
+            self.xPos = -this.length;
+        }
+
+        this.obj.css("left",self.xPos+"px");
+        this.obj.css("top",self.yPos+"px");
+        console.log(self.xPos);
+        console.log(self.yPos);
+    }   
+
+    this.move = function(){
+        this.xPos += this.speedVector;
+    }
+    this.initialize=function(){
+        this.obj=$('<div class="taxi"></div>').appendTo('.gameboard');
+        this.update();
+    }
+    this.initialize();
 }
