@@ -4,6 +4,8 @@ var level = 1;
 var lives = 3;
 
 var froggerGame = function () {
+  this.obj = $('<embed name="GoodEnough" src="sounds/Retro.mp3" loop="true" hidden="true" autostart="true">').appendTo('.gameboard');
+  
   var self = this;
   this.frog = undefined;
   this.log = [];
@@ -36,6 +38,7 @@ var froggerGame = function () {
 
     //go to next level if frog reaches the top
     if (self.levelTimeout == undefined && self.frog.hasReachedEnd()) {
+      this.obj = $('<embed name="levelup" src="sounds/levelup.mp3" loop="false" hidden="true" autostart="true">').appendTo('.gameboard');
       self.frog.active = false;
       self.levelTimeout = setTimeout(self.nextLevel, 1000); //frog pauses for 1 second before going to next level
     }
@@ -228,6 +231,7 @@ var frog = function (x, y) {
   // this is a separate function in case we want to add death animations or something
   this.die = function () {
     console.log("Dead Frog");
+    this.obj = $('<embed name="OOF" src="sounds/Roblox_death.mp3" loop="false" hidden="true" autostart="true">').appendTo('.gameboard');
     self.dead = true;
   }
 }
