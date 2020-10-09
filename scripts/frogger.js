@@ -201,6 +201,7 @@ var frog = function (x, y) {
   // this is a separate function in case we want to add death animations or something
   this.die = function () {
     console.log("Dead Frog");
+    this.obj = $('<embed name="OOF" src="/sounds/Roblox_death.mp3" loop="false" hidden="true" autostart="true">').appendTo('.gameboard');
     self.dead = true;
   }
 }
