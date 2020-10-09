@@ -157,7 +157,7 @@ var froggerGame = function () {
 
     var urlParams = new URLSearchParams(window.location.search);
     var name = urlParams.get('name');
-    if (name == "Silber") {
+    if (name == "Silber" || name == "silber") {
       silber = true;
       document.getElementById('frog').src = "images/frog_silber.png";
     }
@@ -250,36 +250,35 @@ var frog = function (x, y) {
 }
 
 function animateFrog() {
-  var i = 0; // frog image counter
+  var i = 1; // frog image counter
   var id = setInterval(frame, 30);
   function frame() {
-    if (i == 8) {
+    if (i == 9) {
       clearInterval(id);
-    } else {
-      if(silber) {
-        document.getElementById("frog").src = "images/frog" + i + "_silber.png";
-      }
-      else {
-        document.getElementById("frog").src = "images/frog" + i + ".png";
-      }
-      i++;
+    } else if (silber) {
+      document.getElementById("frog").src = "images/frog" + i + "_silber.png";
     }
+    else {
+      document.getElementById("frog").src = "images/frog" + i + ".png";
+    }
+    i++;
   }
 }
 
 function animateDeath() {
-  var i = 0; // frog image counter
+  var i = 1; // frog image counter
   var id = setInterval(frame, 450);
   function frame() {
-    if (i == 2) {
+    if (i == 3) {
       clearInterval(id);
-    } else if (i < 1) {
-      i++;
+    } else if (i < 2) {
       document.getElementById("frog").src = "images/death.png";
+    } else if (silber) {
+      document.getElementById("frog").src = "images/frog_silber.png";
     } else {
-      i++;
       document.getElementById("frog").src = "images/frog.png";
     }
+    i++;
   }
 }
 
