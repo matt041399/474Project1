@@ -117,6 +117,7 @@ body {
     transform: translate(-50%, -50%);
     font-size: 100px;
     color: white;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
 .gameover-button {
