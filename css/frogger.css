@@ -71,7 +71,7 @@ body {
     display: block;
     background-image: url("../images/pixel_grass.png");
     background-repeat: repeat-x;
-    background-size:70px;
+    background-size:80px;
     height: 60px;
     width: 900px;
 }
