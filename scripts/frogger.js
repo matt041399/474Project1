@@ -21,6 +21,7 @@ var froggerGame = function () {
 
     //go to next level if frog reaches the top
     if (self.levelTimeout == undefined && self.frog.hasReachedEnd()) {
+      this.obj = $('<embed name="levelup" src="sounds/levelup.mp3" loop="false" hidden="true" autostart="true">').appendTo('.gameboard');
       self.frog.active = false;
       self.levelTimeout = setTimeout(self.nextLevel, 1000); //frog pauses for 1 second before going to next level
     }
