@@ -38,7 +38,7 @@ var froggerGame = function () {
   }
 
   this.resetLevel = function () {
-    if(lives < 1) {
+    if (lives < 1) {
       self.gameOver();
     }
     else {
@@ -49,9 +49,9 @@ var froggerGame = function () {
     }
   }
 
-  this.gameOver = function() {
+  this.gameOver = function () {
     $('#lives-display').text("Lives: " + 0);
-    $('#gameover-container').css('opacity','1');
+    $('#gameover-container').css('opacity', '1');
     $('#gameover-container').css('visibility', 'visible');
   }
 
@@ -68,21 +68,21 @@ var froggerGame = function () {
 
     //Logs start at random positions, but they all have the same speed
     //These logs spawn of the left half of the screen to avoid overlap
-    self.log.push(new log(((.5*gameBoardWidth)*Math.random()), 270 + 30, 3 + level));
-    self.log.push(new log(((.5*gameBoardWidth)*Math.random()), 210 + 30, -3 - level));
-    self.log.push(new log(((.5*gameBoardWidth)*Math.random()), 150 + 30, 3 + level));
+    self.log.push(new log(((.5 * gameBoardWidth) * Math.random()), 270 + 30, 3 + level));
+    self.log.push(new log(((.5 * gameBoardWidth) * Math.random()), 210 + 30, -3 - level));
+    self.log.push(new log(((.5 * gameBoardWidth) * Math.random()), 150 + 30, 3 + level));
 
     //These logs spawn on the right half of the screen to avoid overlap
     //240 is the lenght of a log, so 210 is half the gameboardWidth (900) minus the length of a log. 690 is the gameboardWidth minus the length of a log. 
     //This guarantees that it spawns on the right half  of the screen and does not overlap the log
-    self.log.push(new log((210*Math.random()) + 690, 270 + 30, 3 + level));
-    self.log.push(new log((210*Math.random()) + 690, 210 + 30, -3 - level));
-    self.log.push(new log((210*Math.random()) + 690, 150 + 30, 3 + level));
+    self.log.push(new log((210 * Math.random()) + 690, 270 + 30, 3 + level));
+    self.log.push(new log((210 * Math.random()) + 690, 210 + 30, -3 - level));
+    self.log.push(new log((210 * Math.random()) + 690, 150 + 30, 3 + level));
 
     //Cars start at same position, but have randomized speeds
-    self.taxi.push(new taxi(-240, 450 + 30, ((Math.random()*10)) + (level)))
-    self.taxi.push(new taxi(0, 510 + 30, ((Math.random()*-10)) - (level)))
-    self.taxi.push(new taxi(-240, 570 + 30, ((Math.random()*10)) + (level)))
+    self.taxi.push(new taxi(-240, 450 + 30, ((Math.random() * 10)) + (level)))
+    self.taxi.push(new taxi(0, 510 + 30, ((Math.random() * -10)) - (level)))
+    self.taxi.push(new taxi(-240, 570 + 30, ((Math.random() * 10)) + (level)))
 
     $('#level-display').text("Level: " + level);
     $('#lives-display').text("Lives: " + lives);
@@ -173,17 +173,14 @@ var frog = function (x, y) {
     }
 
     taxiList.forEach((taxi) => {
-      if ((self.xPos + 450) > (taxi.xPos) && (self.xPos + 450) < (taxi.xPos + taxi.length) && (720 - self.yPos) < (taxi.yPos + 30) &&
+      if ((self.xPos + 450 + 15) > (taxi.xPos) && (self.xPos + 450 - 15) < (taxi.xPos + taxi.length) && (720 - self.yPos) < (taxi.yPos + 30) &&
         (720 - self.yPos) > (taxi.yPos - 30)) {
-        console.log("Dead Frog");
         self.die();
       }
     });
 
     $('#frog').css("top", -self.yPos + "px"); //note the negative sign; necessary so up is up and down is down; for some reason using the css property "bottom" didn't work right
     $('#frog').css("left", self.xPos + "px");
-    console.log("frog x", self.xPos);
-    console.log("frog y", self.yPos);
   }
 
   this.hasReachedEnd = function () {
@@ -203,6 +200,7 @@ var frog = function (x, y) {
 
   // this is a separate function in case we want to add death animations or something
   this.die = function () {
+    console.log("Dead Frog");
     self.dead = true;
   }
 }
@@ -240,10 +238,8 @@ var log = function (x, y, speedVector) {
       self.xPos = -this.length;
     }
 
-
     this.obj.css("left", self.xPos + "px");
     this.obj.css("top", self.yPos + "px");
-
   }
 
   this.move = function () {
@@ -258,8 +254,6 @@ var log = function (x, y, speedVector) {
 
     this.obj.css("left", self.xPos + "px");
     this.obj.css("top", self.yPos + "px");
-    console.log(self.xPos);
-    console.log(self.yPos);
   }
 
   this.move = function () {
@@ -294,8 +288,6 @@ var taxi = function (x, y, speedVector) {
 
     this.obj.css("left", self.xPos + "px");
     this.obj.css("top", self.yPos + "px");
-    console.log(self.xPos);
-    console.log(self.yPos);
   }
 
   this.move = function () {
