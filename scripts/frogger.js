@@ -14,6 +14,23 @@ var froggerGame = function () {
   this.updateInterval = undefined;
   this.levelTimeout = undefined;
 
+  this.jumpSound = undefined;
+
+  this.sound = function(src) {
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    this.play = function(){
+      this.sound.play();
+    }
+    this.stop = function(){
+      this.sound.pause();
+    }
+  }
+
   // update the game state and call update functions of other objects
   this.update = function () {
     self.frog.update(self.log, self.taxi);
@@ -22,12 +39,15 @@ var froggerGame = function () {
 
     //go to next level if frog reaches the top
     if (self.levelTimeout == undefined && self.frog.hasReachedEnd()) {
+      this.obj = $('<embed name="levelup" src="sounds/levelup.mp3" loop="false" hidden="true" autostart="true">').appendTo('.gameboard');
       self.frog.active = false;
       self.levelTimeout = setTimeout(self.nextLevel, 1000); //frog pauses for 1 second before going to next level
     }
 
     if (self.frog.dead) {
       lives--;
+      document.getElementById("frog").style.transform = "none";
+      animateDeath();
       clearInterval(self.updateInterval); //temporarily stop moving things
       self.levelTimeout = setTimeout(self.resetLevel, 1000);
     }
@@ -93,7 +113,11 @@ var froggerGame = function () {
 
   //initialize
   this.initialize = function () {
+
+    //this.jumpSound = new sound("../sounds/jumpSound.wav")
+
     $(document).keydown(function (event) {
+      this.obj = $('<embed name="Jump" src="sounds/Jump_Sound.wav" loop="false" hidden="true" autostart="true">').appendTo('.gameboard');
       if (event.code == "ArrowUp") {
         event.preventDefault();
         self.frog.move(0, 1);
@@ -104,7 +128,6 @@ var froggerGame = function () {
       }
       else if (event.code == "ArrowDown") {
         event.preventDefault();
-        
         self.frog.move(0, -1);
         if(!self.frog.dead && self.frog.active) {
           document.getElementById("frog").style.transform = 'rotate(180deg)';
@@ -113,7 +136,6 @@ var froggerGame = function () {
       }
       else if (event.code == "ArrowLeft") {
         event.preventDefault();
-        
         self.frog.move(-1, 0);
         if(!self.frog.dead && self.frog.active) {
           document.getElementById("frog").style.transform = 'rotate(-90deg)';
@@ -122,13 +144,11 @@ var froggerGame = function () {
       }
       else if (event.code == "ArrowRight") {
         event.preventDefault();
-        
         self.frog.move(1, 0);
         if(!self.frog.dead && self.frog.active) {
           document.getElementById("frog").style.transform = 'rotate(90deg)';
           animateFrog();
         }
-          
       }
     });
 
@@ -230,7 +250,7 @@ var frog = function (x, y) {
 }
 
 function animateFrog() {
-  var i = 1; // frog image counter
+  var i = 0; // frog image counter
   var id = setInterval(frame, 30);
   function frame() {
     if (i == 8) {
@@ -243,6 +263,22 @@ function animateFrog() {
         document.getElementById("frog").src = "images/frog" + i + ".png";
       }
       i++;
+    }
+  }
+}
+
+function animateDeath() {
+  var i = 0; // frog image counter
+  var id = setInterval(frame, 450);
+  function frame() {
+    if (i == 2) {
+      clearInterval(id);
+    } else if (i < 1) {
+      i++;
+      document.getElementById("frog").src = "images/death.png";
+    } else {
+      i++;
+      document.getElementById("frog").src = "images/frog.png";
     }
   }
 }
