@@ -59,9 +59,9 @@ body {
 
 .street{
     display: block;
-    background-image: url("../images/seamless_street.jpg");
+    background-image: url("../images/cartoon_road_detailed.jpg");
     background-repeat: repeat-x;
-    background-size: 60px;
+    background-size: 70px;
     background-color: grey;
     height: 60px;
     width: 900px;
@@ -78,6 +78,9 @@ body {
 
 .water{
     display: block;
+    background-image: url("../images/water_texture.png");
+    background-repeat: repeat-x;
+    background-size: 60px;
     background-color: lightskyblue;
     height: 60px;
     width: 900px;
