@@ -13,6 +13,23 @@ var froggerGame = function () {
   this.updateInterval = undefined;
   this.levelTimeout = undefined;
 
+  this.jumpSound = undefined;
+
+  this.sound = function(src) {
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    this.play = function(){
+      this.sound.play();
+    }
+    this.stop = function(){
+      this.sound.pause();
+    }
+  }
+
   // update the game state and call update functions of other objects
   this.update = function () {
     self.frog.update(self.log, self.taxi);
@@ -95,30 +112,40 @@ var froggerGame = function () {
 
   //initialize
   this.initialize = function () {
+
+    //this.jumpSound = new sound("../sounds/jumpSound.wav")
+
     $(document).keydown(function (event) {
       if (event.code == "ArrowUp") {
         event.preventDefault();
         document.getElementById("frog").style.transform = "none";
         self.frog.move(0, 1);
         animateFrog();
+        //this.jumpSound.play();
       }
       else if (event.code == "ArrowDown") {
         event.preventDefault();
         document.getElementById("frog").style.transform = 'rotate(180deg)';
         self.frog.move(0, -1);
         animateFrog();
+        //this.jumpSound.play();
+
       }
       else if (event.code == "ArrowLeft") {
         event.preventDefault();
         document.getElementById("frog").style.transform = 'rotate(-90deg)';
         self.frog.move(-1, 0);
         animateFrog();
+        //this.jumpSound.play();
+
       }
       else if (event.code == "ArrowRight") {
         event.preventDefault();
         document.getElementById("frog").style.transform = 'rotate(90deg)';
         self.frog.move(1, 0);
         animateFrog();
+        //this.jumpSound.play();
+
       }
     });
 
