@@ -4,6 +4,8 @@ var level = 1;
 var lives = 3;
 
 var froggerGame = function () {
+  this.obj = $('<embed name="GoodEnough" src="sounds/Retro.mp3" loop="true" hidden="true" autostart="true">').appendTo('.gameboard');
+  
   var self = this;
   this.frog = undefined;
   this.log = [];
