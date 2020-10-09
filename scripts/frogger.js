@@ -2,6 +2,7 @@ var gameBoardWidth = 60 * 15;
 var gameBoardHeight = 60 * 13;
 var level = 1;
 var lives = 3;
+var silber = false;
 
 var froggerGame = function () {
   this.obj = $('<embed name="GoodEnough" src="sounds/Retro.mp3" loop="true" hidden="true" autostart="true">').appendTo('.gameboard');
@@ -95,32 +96,52 @@ var froggerGame = function () {
     $(document).keydown(function (event) {
       if (event.code == "ArrowUp") {
         event.preventDefault();
-        document.getElementById("frog").style.transform = "none";
         self.frog.move(0, 1);
-        animateFrog();
+        if(!self.frog.dead && self.frog.active) {
+          document.getElementById("frog").style.transform = "none";
+          animateFrog();
+        }
       }
       else if (event.code == "ArrowDown") {
         event.preventDefault();
-        document.getElementById("frog").style.transform = 'rotate(180deg)';
+        
         self.frog.move(0, -1);
-        animateFrog();
+        if(!self.frog.dead && self.frog.active) {
+          document.getElementById("frog").style.transform = 'rotate(180deg)';
+          animateFrog();
+        }
       }
       else if (event.code == "ArrowLeft") {
         event.preventDefault();
-        document.getElementById("frog").style.transform = 'rotate(-90deg)';
+        
         self.frog.move(-1, 0);
-        animateFrog();
+        if(!self.frog.dead && self.frog.active) {
+          document.getElementById("frog").style.transform = 'rotate(-90deg)';
+          animateFrog();
+        }
       }
       else if (event.code == "ArrowRight") {
         event.preventDefault();
-        document.getElementById("frog").style.transform = 'rotate(90deg)';
+        
         self.frog.move(1, 0);
-        animateFrog();
+        if(!self.frog.dead && self.frog.active) {
+          document.getElementById("frog").style.transform = 'rotate(90deg)';
+          animateFrog();
+        }
+          
       }
     });
 
     self.updateInterval = setInterval(this.update, 20);
 
+
+    var urlParams = new URLSearchParams(window.location.search);
+    var name = urlParams.get('name');
+    if (name == "Silber") {
+      silber = true;
+      document.getElementById('frog').src = "images/frog_silber.png";
+    }
+    
     this.initializeObjects();
   }
 
@@ -215,7 +236,12 @@ function animateFrog() {
     if (i == 8) {
       clearInterval(id);
     } else {
-      document.getElementById("frog").src = "images/frog" + i + ".png";
+      if(silber) {
+        document.getElementById("frog").src = "images/frog" + i + "_silber.png";
+      }
+      else {
+        document.getElementById("frog").src = "images/frog" + i + ".png";
+      }
       i++;
     }
   }
