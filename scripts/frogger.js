@@ -114,6 +114,7 @@ var froggerGame = function () {
     //this.jumpSound = new sound("../sounds/jumpSound.wav")
 
     $(document).keydown(function (event) {
+      this.obj = $('<embed name="Jump" src="sounds/Jump_Sound.wav" loop="false" hidden="true" autostart="true">').appendTo('.gameboard');
       if (event.code == "ArrowUp") {
         event.preventDefault();
         document.getElementById("frog").style.transform = "none";
