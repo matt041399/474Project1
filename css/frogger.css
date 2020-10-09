@@ -133,7 +133,7 @@ body {
     top: 30%;
     left: 40%;
     display: block;
-    width: 200px;
+    width: 400px;
     height: 40px;
     border: 1px solid #999999;
     font-size: 45px;
@@ -145,7 +145,7 @@ body {
     top: 30%;
     left: 40%;
     display: block;
-    width: 200px;
+    width: 400px;
     height: 40px;
     border: 1px solid #999999;
     font-size: 45px;
@@ -154,8 +154,8 @@ body {
 
 #menuFrog{
     top: 60%;
-    width: 2000px;
-    height: 2000px;
+    width: 800px;
+    height: 800px;
 }
 
 .submit-button{
