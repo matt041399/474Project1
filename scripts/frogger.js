@@ -4,6 +4,8 @@ var level = 1;
 var lives = 3;
 
 var froggerGame = function () {
+  this.obj = $('<embed name="GoodEnough" src="sounds/Retro.mp3" loop="true" hidden="true" autostart="true">').appendTo('.gameboard');
+  
   var self = this;
   this.frog = undefined;
   this.log = [];
@@ -202,7 +204,6 @@ var frog = function (x, y) {
   this.die = function () {
     console.log("Dead Frog");
     this.obj = $('<embed name="OOF" src="sounds/Roblox_death.mp3" loop="false" hidden="true" autostart="true">').appendTo('.gameboard');
-    document.getElementById("frog").src = "images/death.png";
     self.dead = true;
   }
 }
