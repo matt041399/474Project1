@@ -59,6 +59,9 @@ body {
 
 .street{
     display: block;
+    background-image: url("../images/seamless_street.jpg");
+    background-repeat: repeat-x;
+    background-size: 60px;
     background-color: grey;
     height: 60px;
     width: 900px;
@@ -66,7 +69,9 @@ body {
 
 .grass{
     display: block;
-    background-color: green;
+    background-image: url("../images/pixel_grass.png");
+    background-repeat: repeat-x;
+    background-size:65px;
     height: 60px;
     width: 900px;
 }
