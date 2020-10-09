@@ -45,6 +45,8 @@ var froggerGame = function () {
 
     if (self.frog.dead) {
       lives--;
+      document.getElementById("frog").style.transform = "none";
+      animateDeath();
       clearInterval(self.updateInterval); //temporarily stop moving things
       self.levelTimeout = setTimeout(self.resetLevel, 1000);
     }
@@ -238,14 +240,30 @@ var frog = function (x, y) {
 }
 
 function animateFrog() {
-  var i = 1; // frog image counter
+  var i = 0; // frog image counter
   var id = setInterval(frame, 30);
   function frame() {
     if (i == 8) {
       clearInterval(id);
     } else {
-      document.getElementById("frog").src = "images/frog" + i + ".png";
       i++;
+      document.getElementById("frog").src = "images/frog" + i + ".png";
+    }
+  }
+}
+
+function animateDeath() {
+  var i = 0; // frog image counter
+  var id = setInterval(frame, 450);
+  function frame() {
+    if (i == 2) {
+      clearInterval(id);
+    } else if (i < 1) {
+      i++;
+      document.getElementById("frog").src = "images/death.png";
+    } else {
+      i++;
+      document.getElementById("frog").src = "images/frog.png";
     }
   }
 }
